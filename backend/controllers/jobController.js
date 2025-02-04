@@ -21,9 +21,10 @@ const createJob = async (req, res) => {
     candidates.forEach(async (candidateEmail) => {
       await sendJobAlertEmail(candidateEmail, newJob);
     });
-
+    console.log(newJob);
     res.status(201).json(newJob);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

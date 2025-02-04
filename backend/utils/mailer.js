@@ -2,7 +2,7 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const transporter = nodemailer.createTransport({
-  service: "gmail", 
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -10,8 +10,9 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = async (email, token) => {
-  const verificationUrl = `${process.env.CLIENT_URL}api/auth/verify/${token}`;
+  const verificationUrl = `${process.env.SERVER_URL}/api/auth/verify/${token}`;
   // console.log("token:-", token);
+  console.log("verifyurl:-", verificationUrl);
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,

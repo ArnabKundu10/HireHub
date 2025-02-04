@@ -4,17 +4,17 @@ const Company = require("../models/Company.js");
 
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) return res.status(401).json({ message: "Not authorized" });
+  if (!token) return res.status(401).json({ message: "Not authorized",status:false });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const company = await Company.findById(decoded.id);
-    if (!company) return res.status(401).json({ message: "Not authorized" });
-
+    if (!company) return res.status(401).json({ message: "Not authorized",status:false});
+    
     req.user = company; // Attach the user info to the request
     next();
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Invalid token",status:false  });
   }
 };
 
