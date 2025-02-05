@@ -9,7 +9,7 @@ const authMiddleware = require("../middleware/authMiddleware.js");
 const router = express.Router();
 
 router.post("/create", authMiddleware, createJob);
-router.get("/", getJobs);
+router.get("/myjobs",authMiddleware, getJobs);
 router.post("/apply", authMiddleware, applyJob);
 
 module.exports = router;

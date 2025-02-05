@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FormInput from './FormInput';
 import axios from "../utils/api"
-const CreateProduct = () => {
+const CreateJob = () => {
    const[email,setEmail]=useState("");
    const [job,setJob]=useState({
       title:"",
@@ -67,6 +67,7 @@ const CreateProduct = () => {
       else alert("already added")
    }
   return (
+   <div className='float-right ms-20 me-20 mt-2  w-2/3 rounded bg-gray-800'>
     <div className='p-10 '>
       <p className='text-center fs-1 mb-10 fw-bolder text-5xl font-extrabold'>
          Create a Job
@@ -125,7 +126,8 @@ const CreateProduct = () => {
       <div className='text-center'><button className='cursor-pointer bg-blue-500 pt-2 pb-2 ps-5 pe-5 font-bold rounded' type='submit' >Submit</button></div>
       </form>
     </div>
+    </div>
   )
 }
 
-export default CreateProduct
+export default CreateJob

@@ -90,7 +90,9 @@ const authCheck = async (req, res) => {
 
     // req.user = company;
     // Attach the user info to the request
-    res.status(201).json({ message: "authorized", status: true });
+    res
+      .status(201)
+      .json({ message: "authorized", company: company, status: true });
   } catch (error) {
     res.status(401).json({ message: "Invalid token", status: false });
   }
