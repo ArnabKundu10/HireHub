@@ -14,7 +14,6 @@ export const AuthProvider=({ children })=> {
     try {
       const { data } = await axios.post(
         "/auth/",
-        {},
         { withCredentials: true }
       );
       const {token,company} = data;

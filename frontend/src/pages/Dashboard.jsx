@@ -10,7 +10,6 @@ export default function Dashboard() {
     try {
       const { data } = await axios.post(
         "/auth/",
-        {},
         { withCredentials: true }
       );
       // navigate("/");
