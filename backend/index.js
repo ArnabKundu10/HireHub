@@ -23,7 +23,7 @@ const allowedOrigins = [
 // Configure CORS dynamically
 
 app.use(
-  cors({origin: "*",
+  cors({origin: allowedOrigins,
     methods: "GET,POST,PUT,DELETE",
     credentials: true})
 );
