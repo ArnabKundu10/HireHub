@@ -8,9 +8,9 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-
+const URL = process.env.SERVER_URL || "http://localhost:5000";
 const sendVerificationEmail = async (email, token) => {
-  const verificationUrl = `${process.env.SERVER_URL}/api/auth/verify/${token}`;
+  const verificationUrl = `${URL}/api/auth/verify/${token}`;
   // console.log("token:-", token);
   console.log("verifyurl:-", verificationUrl);
   const mailOptions = {

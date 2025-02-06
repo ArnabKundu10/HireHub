@@ -12,7 +12,28 @@ connectDB();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
+// const allowedOrigins = [
+//    "http://localhost:5173",  // Development Frontend URL
+//    process.env.CLIENT_URL  // Production Frontend URL
+//  ];
+
+//  // Configure CORS dynamically
+//  app.use(
+//    cors({
+//      origin: function (origin, callback) {
+//        if (!origin || allowedOrigins.includes(origin)) {
+//          callback(null, true);
+//        } else {
+//          callback(new Error("Not allowed by CORS"));
+//        }
+//      },
+//      credentials: true, // Allow cookies & authentication headers
+//      optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+//    })
+//  );
+app.use(
+  cors({ origin: "*", methods: "GET,POST,PUT,DELETE", credentials: true })
+);
 app.use(cookieParser());
 
 // Routes
