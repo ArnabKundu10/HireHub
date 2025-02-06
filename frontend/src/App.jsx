@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from 'react';
-import { Routes, Route,/*  useLocation */} from 'react-router-dom';
+import { Routes, Route, useLocation} from 'react-router-dom';
 // import Layout from './components/Layout';
 // import Home from './pages/Home';
 import Login from './pages/auth/Login';
@@ -11,7 +11,7 @@ import Stats from './components/Stats';
 import CompanyDetails from './components/CompanyDetails';
 import PrivateRoute from './private/PrivateRoute';
 function App() {
-  // const location=useLocation();
+  const location=useLocation();
   return (
     // <Layout>
     //   </Layout>
@@ -19,7 +19,7 @@ function App() {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/" element={ <PrivateRoute><Dashboard /></PrivateRoute>} >
+        <Route path="/" element={ <PrivateRoute> <Dashboard key={location.pathname}/></PrivateRoute>} >
             <Route path="create-job" element={<CreateJob  />} />
             <Route path="statistics" element={<Stats />} />
             <Route path="company-details" element={<CompanyDetails />} />
