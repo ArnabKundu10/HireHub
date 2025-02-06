@@ -23,18 +23,9 @@ const allowedOrigins = [
 // Configure CORS dynamically
 
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Allow cookies & authentication headers
+  cors({origin: "*",
     methods: "GET,POST,PUT,DELETE",
-    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
-  })
+    credentials: true})
 );
 
 // Routes
