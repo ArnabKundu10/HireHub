@@ -13,6 +13,10 @@ connectDB();
 const app = express();
 // app.use(express.json());
 // app.use(cookieParser());
+const allowedOrigins = [
+  "https://hire-hub-lwwa.vercel.app", // Frontend URL
+  "https://hire-hub-zeta-eight.vercel.app" // Backend URL
+];
 
 app.use(
   cors({
@@ -34,6 +38,7 @@ app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
 
 // Ensure credentials are set in response headers
+app.options('/api/auth', cors());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Credentials", "true");
   next();
@@ -41,8 +46,8 @@ app.use((req, res, next) => {
 
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/jobs", jobRoutes);
+app.use("/api/auth",cors(), authRoutes);
+app.use("/api/jobs",cors(), jobRoutes);
 
 // Error Handling Middleware
 app.use(errorHandler);
