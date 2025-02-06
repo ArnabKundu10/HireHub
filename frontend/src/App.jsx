@@ -6,7 +6,6 @@ import { Routes, Route,/*  useLocation */} from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/Dashboard';
-import PostJob from './pages/PostJob';
 import CreateJob from './components/CreateJob';
 import Stats from './components/Stats';
 import CompanyDetails from './components/CompanyDetails';
@@ -25,7 +24,6 @@ function App() {
             <Route path="statistics" element={<Stats />} />
             <Route path="company-details" element={<CompanyDetails />} />
         </Route>
-        <Route path="/post-job" element={<PostJob />} />
       </Routes>
     
   );

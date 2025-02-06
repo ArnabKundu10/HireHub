@@ -1,41 +1,11 @@
 // src/pages/Dashboard.jsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import axios from '../utils/api';
 import { NavLink, Outlet, useNavigate,Link } from 'react-router-dom';
-// import CreateProduct from '../components/CreateJob';
+import { useAuth } from '../context/AuthContext';
 export default function Dashboard() {
-  const [jobs, setJobs] = useState([]);
-  const [user,setUser]=useState({});
-  const [sideBtns,SetSideBtns]=useState(0);
+  const {sideBtns,SetSideBtns}=useAuth();
   const navigate = useNavigate();
-  const verifyCookie = async () => {
-    const { data } = await axios.post(
-      "/auth/",
-      {},
-      { withCredentials: true }
-    );
-    const { status,company} = data;
-     status
-      ? (navigate("/"),setUser(company))
-      : ( navigate("/auth/login"));
-  };
-  const postJobs=async()=>{
-    try {
-      const resp=await axios.get("/jobs/myjobs",{},{withCredentials: true});
-      setJobs(resp.data); 
-      console.log(resp.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  // useEffect(()=>{
-    
-  // },[jobs]);
-  useEffect(() => {
-    // console.log(sideBtns)
-    postJobs();
-    verifyCookie();
-  }, []);
   const Logout = async() => {
     try {
       const response=await axios.post("/auth/logout/",{},
@@ -63,11 +33,11 @@ export default function Dashboard() {
       </div>
       <div className='relative pt-25 ms-2 me-2'>
         <div className='w-1/4 z-50 fixed text-2xl font-bold h-150 text-center flex flex-col align-middle justify-center m-2 bg-gray-800 rounded'>
-           <button onClick={()=>{SetSideBtns(1);navigate("/create-job")}} style={styleSideBtns(1)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded'> Create a job</button>
+           <button onClick={(e)=>{e.preventDefault();SetSideBtns(1);navigate("/create-job")}} style={styleSideBtns(1)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded'> Create a job</button>
 
-           <button onClick={(e)=>{e.preventDefault();SetSideBtns(2);navigate("/statistics",{state:{jobs}})}} style={styleSideBtns(2)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Job Statistics</button>
+           <button onClick={(e)=>{e.preventDefault();SetSideBtns(2);navigate("/statistics")}} style={styleSideBtns(2)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Job Statistics</button>
 
-           <button onClick={(e)=>{e.preventDefault();SetSideBtns(3);navigate("/company-details",{state:{user}})}} style={styleSideBtns(3)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Your Company </button>
+           <button onClick={(e)=>{e.preventDefault();SetSideBtns(3);navigate("/company-details")}} style={styleSideBtns(3)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Your Company </button>
 
            <button style={styleSideBtns(4)} className='cursor-pointer btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' onClick={Logout}>SignOut</button>
         </div>

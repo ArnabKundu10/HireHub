@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormInput from './FormInput';
-import axios from "../utils/api"
+import axios from "../utils/api";
+import { useAuth } from '../context/AuthContext';
 const CreateJob = () => {
    const[email,setEmail]=useState("");
+   const {postJobs,SetSideBtns}=useAuth();
    const [job,setJob]=useState({
       title:"",
       description:"",
@@ -17,15 +19,16 @@ const CreateJob = () => {
          ...job,
          [e.target.name]: e.target.value,
        });
-       console.log(job)
+      //  console.log(job)
    }
    const handleSubmit=async(e)=>{
       e.preventDefault();
       e.stopPropagation();
-      console.log(job)
+      // console.log(job)
      try {
       const resp=await axios.post("/jobs/create",job);
       console.log(resp);
+      postJobs();
       setJob({
          title:"",
       description:"",
@@ -66,6 +69,9 @@ const CreateJob = () => {
       }
       else alert("already added")
    }
+   useEffect(()=>{
+     SetSideBtns(1);
+   },[])
   return (
    <div className='float-right ms-20 me-20 mt-2  w-2/3 rounded bg-gray-800'>
     <div className='p-10 '>

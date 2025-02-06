@@ -13,4 +13,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/* .jobs::-webkit-scrollbar {
+  display: none;
+} */
