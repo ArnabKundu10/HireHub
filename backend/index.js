@@ -14,27 +14,45 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Define allowed origins
+// Define allowed origins - add both your Vercel domains
 const allowedOrigins = [
-  "http://localhost:5173", // Development Frontend URL
-  process.env.CLIENT_URL, // Production Frontend URL from .env
+  "http://localhost:5173",
+  "https://hire-hub-lwwa.vercel.app",    // Your frontend Vercel URL
+  "https://hire-hub-zeta-eight.vercel.app", // Your backend Vercel URL
+  process.env.CLIENT_URL,
 ];
 
-// Configure CORS dynamically
+// CORS configuration
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
       }
+      return callback(null, true);
     },
-    credentials: true, // Allow cookies & authentication headers
-    methods: "GET,POST,PUT,DELETE",
-    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    exposedHeaders: ["set-cookie"],
   })
 );
+
+// Add headers middleware
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
