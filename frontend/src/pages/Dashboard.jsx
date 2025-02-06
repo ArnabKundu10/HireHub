@@ -4,15 +4,30 @@ import axios from '../utils/api';
 import { NavLink, Outlet, useNavigate,Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 export default function Dashboard() {
-  const {sideBtns,SetSideBtns,verified}=useAuth();
+  const {sideBtns,SetSideBtns,token,setToken,verifyCookie}=useAuth();
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(!verified) navigate("/auth/login");
-  },[])
+  const verify = async () => {
+    try {
+      const { data } = await axios.post(
+        "/auth/",
+        {},
+        { withCredentials: true }
+      );
+      // navigate("/");
+    } catch (error) {
+       console.log(error);
+       navigate("/auth/login");
+    }
+    
+};
+useEffect(()=>{
+  verify();
+},[]);
   const Logout = async() => {
     try {
       const response=await axios.post("/auth/logout/",{},
         { withCredentials: true });
+         setToken("");
          navigate("/auth/register"); 
          alert(response.data.message);
     } catch (error) {

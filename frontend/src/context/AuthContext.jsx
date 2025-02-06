@@ -8,7 +8,6 @@ const AuthContext = createContext();
 export const AuthProvider=({ children })=> {
   const [sideBtns,SetSideBtns]=useState(0);
   const [token, setToken] = useState("");
-  const [verified, setVerified] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [user,setUser]=useState({});
   const verifyCookie = async () => {
@@ -18,12 +17,11 @@ export const AuthProvider=({ children })=> {
         {},
         { withCredentials: true }
       );
-      const {status,company} = data;
-      setVerified(true);
+      const {token,company} = data;
+      setToken(token);
       console.log(company);
       setUser(company);
     } catch (error) {
-      setVerified(false);
        console.log(error);
     }
     
@@ -43,7 +41,7 @@ const postJobs=async()=>{
   }, []);
 
   return (
-    <AuthContext.Provider value={{verified, setVerified,postJobs,verifyCookie, user, setUser,token,setToken,jobs,setJobs,sideBtns,SetSideBtns}}>
+    <AuthContext.Provider value={{postJobs,verifyCookie, user, setUser,token,setToken,jobs,setJobs,sideBtns,SetSideBtns}}>
       {children}
     </AuthContext.Provider>
   );

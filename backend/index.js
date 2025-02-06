@@ -14,47 +14,28 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Define specific allowed origins
+// Define allowed origins
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://hire-hub-lwwa.vercel.app",
-  "https://hire-hub-zeta-eight.vercel.app",
-  "http://localhost:5000",
+  "http://localhost:5173", // Development Frontend URL
+  process.env.CLIENT_URL, // Production Frontend URL from .env
 ];
 
-// CORS configuration
+// Configure CORS dynamically
+
 app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin || allowedOrigins[0]);
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow cookies & authentication headers
+    methods: "GET,POST,PUT,DELETE",
+    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
   })
 );
-
-// Pre-flight requests
-app.options("*", (req, res) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-  }
-  res.sendStatus(200);
-});
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -9,7 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CreateJob from './components/CreateJob';
 import Stats from './components/Stats';
 import CompanyDetails from './components/CompanyDetails';
-
+// import PrivateRoute from './private/PrivateRoute';
 function App() {
   // const location=useLocation();
   return (
