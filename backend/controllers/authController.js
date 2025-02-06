@@ -106,9 +106,9 @@ console.log(token);
     res.status(401).json({ message: "Invalid token", status: false });
   }
 };
-const logout = (req, res) => {
+const logout =  (req, res) => {
   try {
-    res.clearCookie("authToken", {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: true, // Use only in HTTPS
       // sameSite: "None",
