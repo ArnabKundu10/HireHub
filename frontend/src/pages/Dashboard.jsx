@@ -4,7 +4,7 @@ import axios from '../utils/api';
 import { NavLink, Outlet, useNavigate,Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 export default function Dashboard() {
-  const {sideBtns,SetSideBtns,token,setToken,verifyCookie}=useAuth();
+  const {sideBtns,SetSideBtns,setToken}=useAuth();
   const navigate = useNavigate();
   const verify = async () => {
     try {
