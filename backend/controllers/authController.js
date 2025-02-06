@@ -58,7 +58,7 @@ const login = async (req, res) => {
         httpOnly: true,
         secure: true, // Use only in HTTPS
         maxAge: 24 * 60 * 60 * 1000,
-        sameSite: "Strict",
+        sameSite: "None",
       })
       .json({ message: "Login successful", token: token });
   } catch (error) {
@@ -103,7 +103,7 @@ const logout = (req, res) => {
     res.clearCookie("authToken", {
       httpOnly: true,
       secure: true, // Use only in HTTPS
-      sameSite: "Strict",
+      sameSite: "None",
     });
     res.json({ message: "Logged out successfully", status: true });
   } catch (error) {

@@ -1,11 +1,14 @@
 // src/pages/Dashboard.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from '../utils/api';
 import { NavLink, Outlet, useNavigate,Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 export default function Dashboard() {
-  const {sideBtns,SetSideBtns}=useAuth();
+  const {sideBtns,SetSideBtns,verified}=useAuth();
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(!verified) navigate("/auth/login");
+  },[])
   const Logout = async() => {
     try {
       const response=await axios.post("/auth/logout/",{},

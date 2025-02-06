@@ -1,12 +1,14 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect,useContext } from 'react';
 import axios from '../utils/api';
+import {Navigate } from 'react-router-dom';
 // import Cookies  from 'js-cookie';
 const AuthContext = createContext();
 
 export const AuthProvider=({ children })=> {
   const [sideBtns,SetSideBtns]=useState(0);
   const [token, setToken] = useState("");
+  const [verified, setVerified] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [user,setUser]=useState({});
   const verifyCookie = async () => {
@@ -17,14 +19,12 @@ export const AuthProvider=({ children })=> {
         { withCredentials: true }
       );
       const {status,company} = data;
-      // console.log(status);
+      setVerified(true);
+      console.log(company);
       setUser(company);
-      //  status
-      //   ? (navigate("/"))
-      //   : ( navigate("/auth/login"));
     } catch (error) {
+      setVerified(false);
        console.log(error);
-       navigate("/auth/login");
     }
     
 };
@@ -43,7 +43,7 @@ const postJobs=async()=>{
   }, []);
 
   return (
-    <AuthContext.Provider value={{postJobs,verifyCookie, user, setUser,token,setToken,jobs,setJobs,sideBtns,SetSideBtns}}>
+    <AuthContext.Provider value={{verified, setVerified,postJobs,verifyCookie, user, setUser,token,setToken,jobs,setJobs,sideBtns,SetSideBtns}}>
       {children}
     </AuthContext.Provider>
   );

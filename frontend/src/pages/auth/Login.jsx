@@ -6,7 +6,7 @@ import FormInput from '../../components/FormInput';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
-  const {setToken}=useAuth();
+  const {setToken,setVerified}=useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // useNavigate replaces useRouter
@@ -18,6 +18,7 @@ export default function Login() {
       // console.log(response);
       if(response.data?.token){
         setToken(response.data.token);
+        setVerified(true);
         setTimeout(() => {
           navigate("/");
         }, 1000);
