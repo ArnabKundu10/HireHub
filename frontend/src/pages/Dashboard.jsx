@@ -9,8 +9,7 @@ export default function Dashboard() {
   const verify = async () => {
     try {
       const { data } = await axios.post(
-        "/auth/",
-        { withCredentials: true }
+        "/auth/"
       );
       // navigate("/");
     } catch (error) {

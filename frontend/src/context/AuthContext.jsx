@@ -13,8 +13,7 @@ export const AuthProvider=({ children })=> {
   const verifyCookie = async () => {
     try {
       const { data } = await axios.post(
-        "/auth/",
-        { withCredentials: true }
+        "/auth/"
       );
       const {token,company} = data;
       setToken(token);
