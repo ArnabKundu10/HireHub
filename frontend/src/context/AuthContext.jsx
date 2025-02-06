@@ -1,22 +1,21 @@
 // src/context/AuthContext.jsx
 import React, { createContext, useState, useEffect,useContext } from 'react';
 import axios from '../utils/api';
-import {Navigate } from 'react-router-dom';
+// import {Navigate } from 'react-router-dom';
 // import Cookies  from 'js-cookie';
 const AuthContext = createContext();
 
 export const AuthProvider=({ children })=> {
   const [sideBtns,SetSideBtns]=useState(0);
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [jobs, setJobs] = useState([]);
   const [user,setUser]=useState({});
   const verifyCookie = async () => {
     try {
       const { data } = await axios.post(
-        "/auth/"
+        "/auth/",token
       );
-      const {token,company} = data;
-      setToken(token);
+      const {company} = data;
       console.log(company);
       setUser(company);
     } catch (error) {
@@ -26,7 +25,7 @@ export const AuthProvider=({ children })=> {
 };
 const postJobs=async()=>{
   try {
-    const resp=await axios.get("/jobs/myjobs",{},{withCredentials: true});
+    const resp=await axios.post("/jobs/myjobs",token);
     setJobs(resp.data); 
     console.log(resp.data);
   } catch (error) {
@@ -34,9 +33,9 @@ const postJobs=async()=>{
   }
 }
   useEffect(() => {
-    postJobs();
     verifyCookie();
-  }, []);
+    postJobs();
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{postJobs,verifyCookie, user, setUser,token,setToken,jobs,setJobs,sideBtns,SetSideBtns}}>

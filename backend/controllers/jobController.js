@@ -4,13 +4,13 @@ const { sendJobAlertEmail } = require("../utils/mailer.js");
 
 const createJob = async (req, res) => {
   try {
-    const { title, description, experienceLevel, candidates, endDate } =
+    const { title, description, experienceLevel, candidates, endDate,user } =
       req.body;
     const newJob = new Job({
       title,
       description,
       experienceLevel,
-      company: req.user.id,
+      company: user.id,
       candidates,
       endDate,
     });

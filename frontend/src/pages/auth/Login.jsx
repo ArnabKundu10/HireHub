@@ -6,7 +6,7 @@ import FormInput from '../../components/FormInput';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
-  const {setToken}=useAuth();
+  const {setToken,SetSideBtns}=useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // useNavigate replaces useRouter
@@ -14,10 +14,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response=await axios.post('/auth/login', { email, password },{ withCredentials: true });
+      const response=await axios.post('/auth/login', { email, password });
       // console.log(response);
       if(response.data?.token){
         setToken(response.data.token);
+        localStorage.setItem("token",response.data.token);
+        SetSideBtns(0);
         setTimeout(() => {
           navigate("/");
         }, 1000);

@@ -4,7 +4,7 @@ import axios from "../utils/api";
 import { useAuth } from '../context/AuthContext';
 const CreateJob = () => {
    const[email,setEmail]=useState("");
-   const {postJobs,SetSideBtns}=useAuth();
+   const {postJobs,SetSideBtns,user}=useAuth();
    const [job,setJob]=useState({
       title:"",
       description:"",
@@ -25,8 +25,10 @@ const CreateJob = () => {
       e.preventDefault();
       e.stopPropagation();
       // console.log(job)
+      const makejob={...job,user:user};
+      console.log(makejob)
      try {
-      const resp=await axios.post("/jobs/create",job);
+      const resp=await axios.post("/jobs/create",{makejob});
       console.log(resp);
       postJobs();
       setJob({

@@ -9,7 +9,7 @@ import Dashboard from './pages/Dashboard';
 import CreateJob from './components/CreateJob';
 import Stats from './components/Stats';
 import CompanyDetails from './components/CompanyDetails';
-// import PrivateRoute from './private/PrivateRoute';
+import PrivateRoute from './private/PrivateRoute';
 function App() {
   // const location=useLocation();
   return (
@@ -19,7 +19,7 @@ function App() {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/register" element={<Register />} />
-        <Route path="/" element={<Dashboard />} >
+        <Route path="/" element={ <PrivateRoute><Dashboard /></PrivateRoute>} >
             <Route path="create-job" element={<CreateJob  />} />
             <Route path="statistics" element={<Stats />} />
             <Route path="company-details" element={<CompanyDetails />} />

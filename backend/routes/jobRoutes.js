@@ -8,8 +8,8 @@ const authMiddleware = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
 
-router.post("/create", authMiddleware, createJob);
-router.get("/myjobs",authMiddleware, getJobs);
+router.post("/create", createJob);
+router.post("/myjobs",authMiddleware, getJobs);
 router.post("/apply", authMiddleware, applyJob);
 
 module.exports = router;

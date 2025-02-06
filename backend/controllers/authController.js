@@ -79,11 +79,17 @@ const verifyEmail = async (req, res) => {
   }
 };
 const authCheck = async (req, res) => {
-  const token = req.cookies.token;
+  
+  try {
+    const tk = req.body;
+  
+// Retrieve the token
+const token = Object.keys(tk)[0];
+
+console.log(token);
   if (!token)
     return res.status(401).json({ message: "Not authorized", status: false });
 
-  try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const company = await Company.findById(decoded.id);
     if (!company)
@@ -91,10 +97,12 @@ const authCheck = async (req, res) => {
 
     // req.user = company;
     // Attach the user info to the request
+    console.log(company);
     res
       .status(201)
       .json({ message: "authorized",token:token, company: company, status: true });
   } catch (error) {
+    console.log(error);
     res.status(401).json({ message: "Invalid token", status: false });
   }
 };

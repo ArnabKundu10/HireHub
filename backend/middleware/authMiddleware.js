@@ -3,7 +3,10 @@ const jwt = require("jsonwebtoken");
 const Company = require("../models/Company.js");
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const tk = req.body;
+  
+// Retrieve the token
+const token = Object.keys(tk)[0];
   if (!token) return res.status(401).json({ message: "Not authorized",status:false });
 
   try {
