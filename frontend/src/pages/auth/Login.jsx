@@ -1,14 +1,12 @@
 // src/pages/auth/Login.jsx
 import React, { useState } from 'react';
 import axios from '../../utils/api';
-import { useCookies } from "react-cookie";
 import { NavLink, useNavigate } from 'react-router-dom';
 import FormInput from '../../components/FormInput';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
   const {setToken}=useAuth();
-    const [cookie,setCookie] = useCookies(['token']);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate(); // useNavigate replaces useRouter
@@ -20,7 +18,6 @@ export default function Login() {
       // console.log(response);
       if(response.data?.token){
         setToken(response.data.token);
-        setCookie("token",response.data.token,{path:"/"})
         setTimeout(() => {
           navigate("/");
         }, 1000);
