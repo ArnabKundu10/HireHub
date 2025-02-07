@@ -6,11 +6,12 @@ const createJob = async (req, res) => {
   try {
     const { title, description, experienceLevel, candidates, endDate,user } =
       req.body;
+      console.log((user));
     const newJob = new Job({
       title,
       description,
       experienceLevel,
-      company: user.id,
+      company: user._id,
       candidates,
       endDate,
     });
