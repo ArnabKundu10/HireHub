@@ -21,7 +21,8 @@ const register = async (req, res) => {
     const token = jwt.sign({ id: newCompany._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    sendVerificationEmail(newCompany.email, token);
+    const result=await sendVerificationEmail(newCompany.email, token);
+    console.log(result);
     res
       .status(201)
       .json({ message: "Company registered, please verify your email" });

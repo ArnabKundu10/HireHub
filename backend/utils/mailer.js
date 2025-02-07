@@ -21,7 +21,8 @@ const sendVerificationEmail = async (email, token) => {
   };
   // console.log(mailOptions, process.env.EMAIL_PASS);
   try {
-    await transporter.sendMail(mailOptions);
+    const result=await transporter.sendMail(mailOptions);
+    return result;
   } catch (error) {
     console.error("Error sending email:", error);
   }
