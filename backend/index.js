@@ -19,6 +19,7 @@ app.use(
     credentials: true,
   })
 );
+app.options('*', cors()); 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,7 +31,6 @@ app.get("/",(req,res)=>{
 })
 app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
-
 // Error Handling Middleware
 app.use(errorHandler);
 
