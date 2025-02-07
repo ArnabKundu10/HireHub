@@ -6,7 +6,7 @@ const createJob = async (req, res) => {
   try {
     const { title, description, experienceLevel, candidates, endDate,user } =
       req.body;
-      console.log((user));
+      console.log(user);
     const newJob = new Job({
       title,
       description,
