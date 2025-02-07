@@ -25,10 +25,10 @@ const CreateJob = () => {
       e.preventDefault();
       e.stopPropagation();
       // console.log(job)
-      const makejob={...job,user:user};
-      console.log(makejob)
+      job.user=user;
+      console.log(job);
      try {
-      const resp=await axios.post("/jobs/create",{makejob});
+      const resp=await axios.post("/jobs/create",job);
       console.log(resp);
       postJobs();
       setJob({
