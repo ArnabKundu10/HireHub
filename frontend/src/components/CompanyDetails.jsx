@@ -1,36 +1,59 @@
-import React, { useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
-const CompanyDetails = () => {
-  const {user,SetSideBtns,jobs}=useAuth();
-  // console.log(user);
-   useEffect(()=>{
-    SetSideBtns(3);
-   },[])
-  return (
-    <div className='flex flex-col align-middle justify-center float-right h-dvh ms-20 me-20 mt-2 pt-10 p-20  w-2/3 rounded bg-gray-800'>
-      <p className='font-extrabold text-5xl text-center mb-4'>{user.name}</p>
-      <div className='flex justify-between border-b-1 p-3 m-3 text-xl border-x-white'>
-        <div>Company Name</div>
-        <div>{user.name}</div>
-      </div>
-      <div className='flex justify-between border-b-1 p-3 m-3 text-xl border-x-white'>
-         <div>Email-id</div>
-         <div>{user.email}</div>
-      </div>
-      <div className='flex justify-between border-b-1 p-3 m-3 text-xl border-x-white'>
-         <div>Date of profile creation</div>
-         <div>{new Date(user.createdAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "2-digit"
-           })}</div>
-      </div>
-      <div className='flex justify-between border-b-1 p-3 m-3 text-xl border-x-white'>
-         <div>Total number of job posted</div>
-         <div>{jobs.length}</div>
-      </div>
-    </div>
-  )
-}
+// src/pages/CompanyDetails.jsx
+import React, { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { Briefcase, Mail, Calendar, Users } from "lucide-react";
 
-export default CompanyDetails
+export default function CompanyDetails() {
+  const { user, SetSideBtns, jobs } = useAuth();
+
+  useEffect(() => {
+    SetSideBtns(3);
+  }, [SetSideBtns]);
+
+  return (
+    <section className="max-w-4xl mx-auto mt-10 bg-white shadow-md rounded-2xl overflow-hidden">
+      <div className="bg-blue-600 p-6 text-white flex items-center">
+        <Briefcase size={28} className="mr-4" />
+        <h2 className="text-3xl font-bold">Company Profile</h2>
+      </div>
+
+      <div className="p-8 space-y-6">
+        <div className="text-center">
+          <h3 className="text-4xl font-extrabold text-gray-800">{user.name}</h3>
+        </div>
+
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700">
+          <div className="flex items-center">
+            <Mail size={20} className="text-blue-500 mr-2" />
+            <div>
+              <dt className="font-semibold">Email Address</dt>
+              <dd>{user.email}</dd>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <Calendar size={20} className="text-green-500 mr-2" />
+            <div>
+              <dt className="font-semibold">Joined On</dt>
+              <dd>
+                {new Date(user.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "2-digit",
+                })}
+              </dd>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <Users size={20} className="text-purple-500 mr-2" />
+            <div>
+              <dt className="font-semibold">Jobs Posted</dt>
+              <dd>{jobs.length}</dd>
+            </div>
+          </div>
+        </dl>
+      </div>
+    </section>
+  );
+}

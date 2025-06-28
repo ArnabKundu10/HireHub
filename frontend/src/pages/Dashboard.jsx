@@ -1,73 +1,138 @@
 // src/pages/Dashboard.jsx
-import React from 'react';
-import axios from '../utils/api';
-import { NavLink, Outlet, useNavigate,Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React from "react";
+import axios from "../utils/api";
+import { NavLink, Outlet, useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Home, BarChart2, Briefcase, LogOut } from "lucide-react";
+
 export default function Dashboard() {
-  const {sideBtns,SetSideBtns,setToken}=useAuth();
+  const { sideBtns, SetSideBtns, setToken } = useAuth();
   const navigate = useNavigate();
-  const Logout = async() => {
+
+  const handleLogout = async () => {
     try {
-      const response=await axios.post("/auth/logout/");
-         setToken("");
-         localStorage.removeItem("token");
-         navigate("/auth/register"); 
-         alert(response.data.message);
+      const response = await axios.post("/auth/logout/");
+      setToken("");
+      localStorage.removeItem("token");
+      navigate("/auth/register");
+      alert(response.data.message);
     } catch (error) {
-      alert("logout successfully");
-      console.log(error)
+      console.error(error);
+      alert("Logged out successfully");
     }
   };
-  const styleSideBtns=(id)=>{
-    if(id===sideBtns){
-      return {
-         backgroundColor:"white",
-         color:"rgb(43,127,255)"
-      }
-    }
-  }
+
+  const menuItems = [
+    {
+      id: 0,
+      label: "Home",
+      icon: <Home size={20} />,
+      path: "/",
+      action: () => SetSideBtns(0),
+    },
+    {
+      id: 1,
+      label: "Create Job",
+      icon: <Briefcase size={20} />,
+      path: "/create-job",
+      action: () => SetSideBtns(1),
+    },
+    {
+      id: 2,
+      label: "Statistics",
+      icon: <BarChart2 size={20} />,
+      path: "/statistics",
+      action: () => SetSideBtns(2),
+    },
+    {
+      id: 3,
+      label: "Company Details",
+      icon: <Briefcase size={20} />,
+      path: "/company-details",
+      action: () => SetSideBtns(3),
+    },
+  ];
 
   return (
-    <div>
-      <div className='bg-nav p-4 flex justify-center fixed z-50 w-full bg-blue-500 text-white'>
-      <div onClick={()=>SetSideBtns(0)} className='fs-4 me-4 text-5xl font-bold'><NavLink to="/">HireHub</NavLink></div>
-      </div>
-      <div className='relative pt-25 ms-2 me-2'>
-        <div className='w-1/4 z-50 fixed text-2xl font-bold h-150 text-center flex flex-col align-middle justify-center m-2 bg-gray-800 rounded'>
-           <button onClick={(e)=>{e.preventDefault();SetSideBtns(1);navigate("/create-job")}} style={styleSideBtns(1)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded'> Create a job</button>
-
-           <button onClick={(e)=>{e.preventDefault();SetSideBtns(2);navigate("/statistics")}} style={styleSideBtns(2)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Job Statistics</button>
-
-           <button onClick={(e)=>{e.preventDefault();SetSideBtns(3);navigate("/company-details")}} style={styleSideBtns(3)}  className='btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' >Your Company </button>
-
-           <button style={styleSideBtns(4)} className='cursor-pointer btn hover:bg-white hover:text-blue-500 bg-blue-500 text-white p-5 ms-5 me-5 mt-1 rounded' onClick={Logout}>SignOut</button>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white shadow-lg">
+        <div className="p-6 text-center border-b">
+          <NavLink to="/" className="text-2xl font-extrabold text-blue-600">
+            HireHub
+          </NavLink>
         </div>
-        {!sideBtns && 
-        <div className='flex flex-col justify-center align-middle float-right ms-20 me-20 mt-2 text-center p-20 h-150 w-2/3 rounded bg-gray-800'>
-          <div className=''>
-          <p className='font-bold text-5xl'>
-              Welcome to Your job portal
-            </p>
-            <p className='font-bold text-xl'>
-              Here, you can post and manage your job through seamless way  
-            </p>
-          </div>
-            
-            <div className='font-bold text-xl flex '>
-              <div className='w-1/2 p-5 rounded bg-black m-2'>
-                <p>Wanna Create a job ? Check the link below</p> 
-                <p onClick={()=>SetSideBtns(1)} className='text-blue-500'><Link to="create-job"> Create</Link></p>
-              </div>
-              <div className='w-1/2 p-5 rounded bg-black m-2'>
-               <p>See your posted job here</p> 
-               <p onClick={()=>SetSideBtns(2)} className='text-blue-500' ><Link to="statistics"> All posted jobs</Link></p>
+        <nav className="mt-8">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              className={({ isActive }) =>
+                `flex items-center px-6 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 ${
+                  isActive || sideBtns === item.id
+                    ? "bg-blue-100 text-blue-600"
+                    : ""
+                }`
+              }
+              onClick={() => {
+                item.action();
+                navigate(item.path);
+              }}
+            >
+              <span className="mr-3">{item.icon}</span>
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+        <div className="absolute bottom-0 w-60 p-6">
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+          >
+            <LogOut size={18} className="mr-2" />
+            Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-y-auto">
+        <header className="p-4 shadow-sm bg-white">
+          <h1 className="text-xl font-semibold text-gray-800">
+            {menuItems.find((item) => item.id === sideBtns)?.label || "Welcome"}
+          </h1>
+        </header>
+
+        <main className="p-6">
+          {sideBtns === 0 && (
+            <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-8 text-center">
+              <h2 className="text-4xl font-bold mb-4">
+                Welcome to Your Job Portal
+              </h2>
+              <p className="text-lg text-gray-600 mb-6">
+                Post and manage your jobs effortlessly.
+              </p>
+              <div className="grid grid-cols-2 gap-6">
+                <Link
+                  to="/create-job"
+                  onClick={() => SetSideBtns(1)}
+                  className="p-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Create a Job
+                </Link>
+                <Link
+                  to="/statistics"
+                  onClick={() => SetSideBtns(2)}
+                  className="p-6 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                >
+                  View Posted Jobs
+                </Link>
               </div>
             </div>
-        </div>
-         }  
-        
-        <Outlet/>
-        {/* <CreateProduct/> */}
+          )}
+
+          <Outlet />
+        </main>
       </div>
     </div>
   );

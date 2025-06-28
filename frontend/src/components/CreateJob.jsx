@@ -1,141 +1,181 @@
-import React, { useEffect, useState } from 'react'
-import FormInput from './FormInput';
+// src/pages/CreateJob.jsx
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import axios from "../utils/api";
-import { useAuth } from '../context/AuthContext';
-const CreateJob = () => {
-   const[email,setEmail]=useState("");
-   const {postJobs,SetSideBtns,user}=useAuth();
-   const [job,setJob]=useState({
-      title:"",
-      description:"",
-      experienceLevel:"BEGINNER",
-      candidates : [],
-      endDate:""
-   });
-   const handleChange=(e)=>{
-      e.preventDefault();
-// console.log(e.target.value)
-      setJob({
-         ...job,
-         [e.target.name]: e.target.value,
-       });
-      //  console.log(job)
-   }
-   const handleSubmit=async(e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      // console.log(job)
-      job.user=user;
-      console.log(job);
-     try {
-      const resp=await axios.post("/jobs/create",job);
-      console.log(resp);
+import FormInput from "./FormInput";
+import { Tag, X, CalendarCheck, Briefcase } from "lucide-react";
+
+export default function CreateJob() {
+  const { postJobs, SetSideBtns, user } = useAuth();
+  const [job, setJob] = useState({
+    title: "",
+    description: "",
+    experienceLevel: "BEGINNER",
+    candidates: [],
+    endDate: "",
+  });
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    SetSideBtns(1);
+  }, [SetSideBtns]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setJob((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const addEmail = (e) => {
+    e.preventDefault();
+    if (!email) return alert("Please enter a valid email");
+    if (job.candidates.includes(email)) return alert("Email already added");
+    setJob((prev) => ({ ...prev, candidates: [...prev.candidates, email] }));
+    setEmail("");
+  };
+
+  const removeEmail = (idx) => {
+    setJob((prev) => ({
+      ...prev,
+      candidates: prev.candidates.filter((_, i) => i !== idx),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/jobs/create", { ...job, user });
       postJobs();
       setJob({
-         title:"",
-      description:"",
-      experienceLevel:"",
-      candidates : [],
-      endDate:"",
-   }
-      )
-      setEmail("");
-      alert("Job created Successfully"); 
-     } catch (error) {
-       console.log(error);
-     }
-   }
-   const filterEmail=(e,index)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      setJob((prevJob) => ({
-         ...prevJob,
-         candidates: [...prevJob.candidates.filter((_, i) => i !== index)], // Add new email to candidates array
-       })); 
-   }
-   const handleEmail=(e)=>{
-    setEmail(e.target.value);
-   }
-   const addEmail=(e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      if(!job.candidates.includes(email) && email){
-         setJob((prevJob) => ({
-            ...prevJob,
-            candidates: [...prevJob.candidates, email], // Add new email to candidates array
-          }));
-          setEmail("");   
-      }    
-      else if(!email){
-         alert("Do not add empty email")
-      }
-      else alert("already added")
-   }
-   useEffect(()=>{
-     SetSideBtns(1);
-   },[])
+        title: "",
+        description: "",
+        experienceLevel: "BEGINNER",
+        candidates: [],
+        endDate: "",
+      });
+      alert("Job created successfully");
+    } catch (error) {
+      console.error(error);
+      alert("Error creating job");
+    }
+  };
+
   return (
-   <div className='float-right ms-20 me-20 mt-2  w-2/3 rounded bg-gray-800'>
-    <div className='p-10 '>
-      <p className='text-center fs-1 mb-10 fw-bolder text-5xl font-extrabold'>
-         Create a Job
-      </p>
-      <form onSubmit={handleSubmit}>
-      <div className="mb-3 text-xl">
-         <label htmlFor="exampleFormControlInput1" className="form-label">Job Title: </label>
-         <FormInput onChange={handleChange}
-                value={job.title}
-                type="text"
-                placeholder="Title"
-                name='title'
-      />
+    <div className="max-w-3xl mx-auto mt-12 bg-white shadow-lg rounded-2xl overflow-hidden">
+      <div className="bg-indigo-600 flex items-center p-6 text-white">
+        <Briefcase size={28} className="mr-4" />
+        <h2 className="text-3xl font-bold">Create a New Job</h2>
       </div>
-      <div className="mb-3 text-xl">
-         <label htmlFor="exampleFormControlInput1" className="form-label">Description: </label>
-         <FormInput onChange={handleChange}
-                value={job.description}
-                type="text"
-                placeholder="description"
-                name='description'
-         />
-      </div>
-      <div className="mb-3 text-xl">
-         <label htmlFor="exampleFormControlInput1" className="form-label">Experience: </label>
-         <select name='experienceLevel' onChange={handleChange}
-          value={job.experienceLevel}
-           className="form-select w-1/2 p-2 mb-2 bg-gray-500 border-gray-500 rounded" aria-label="Default select example">
-         <option value="BEGINNER">BEGINNER</option>
-         <option value="INTERMEDIATE">INTERMEDIATE</option>
-         <option value="EXPERT">EXPERT</option>
-      </select>
-      </div>
-      <div className="mb-3 text-xl">
-         <label htmlFor="exampleFormControlInput1" className="form-label">Send Job Email Alerts: </label>
-         <FormInput onChange={handleEmail}
-                value={email}
-                type="email"
-                placeholder="example@gmail.com"
-                name='email'
-         />
-         <button onClick={addEmail} className='p-2 text-blue-500 border-1 border-blue-500 bg-transparent'>+ Add</button>
-         <div>
-   {job.candidates.map((elem,id)=> <button className='bg-gray-500 p-2 m-2' key={id} >{elem} <i className="fa-solid fa-xmark" onClick={(e)=>filterEmail(e,id)}></i></button>) }
-         </div>
-      </div>
-      <div className="mb-3 text-xl">
-         <label htmlFor="exampleFormControlInput1" className="form-label">End Date: </label>
-         <FormInput onChange={handleChange}
-               //  value={job.endDate}
-                type="date"
-                placeholder="EndDate"
-                name='endDate'
-         />
-      </div>
-      <div className='text-center'><button className='cursor-pointer bg-blue-500 pt-2 pb-2 ps-5 pe-5 font-bold rounded' type='submit' >Submit</button></div>
+
+      <form onSubmit={handleSubmit} className="p-8 space-y-6 bg-white">
+        <div>
+          <label className="block text-gray-800 text-lg font-semibold mb-2">
+            Job Title
+          </label>
+          <FormInput
+            name="title"
+            value={job.title}
+            onChange={handleChange}
+            placeholder="Enter job title"
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring focus:ring-indigo-200"
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-800 text-lg font-semibold mb-2">
+            Description
+          </label>
+          <textarea
+            name="description"
+            value={job.description}
+            onChange={handleChange}
+            rows={4}
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring focus:ring-indigo-200"
+            placeholder="Describe the role..."
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-800 text-lg font-semibold mb-2">
+            Experience Level
+          </label>
+          <select
+            name="experienceLevel"
+            value={job.experienceLevel}
+            onChange={handleChange}
+            className="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200"
+          >
+            <option value="BEGINNER">Beginner</option>
+            <option value="INTERMEDIATE">Intermediate</option>
+            <option value="EXPERT">Expert</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-gray-800 text-lg font-semibold mb-2">
+            Application Deadline
+          </label>
+          <div className="relative">
+            <CalendarCheck
+              className="absolute left-3 top-3 text-gray-400"
+              size={20}
+            />
+            <FormInput
+              type="date"
+              name="endDate"
+              //   value={job.endDate}
+              onChange={handleChange}
+              className="w-full pl-200 p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-gray-800 text-lg font-semibold mb-2">
+            Email Alerts
+          </label>
+          <div className="flex items-center space-x-2">
+            <FormInput
+              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="candidate@example.com"
+              className="flex-1 p-3 border border-gray-300 rounded-lg bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring focus:ring-indigo-200"
+            />
+            <button
+              onClick={addEmail}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Add
+            </button>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {job.candidates.map((cand, idx) => (
+              <span
+                key={idx}
+                className="flex items-center bg-gray-100 text-gray-800 px-3 py-1 rounded-full"
+              >
+                <Tag size={16} className="mr-1 text-indigo-500" />
+                {cand}
+                <X
+                  size={16}
+                  className="ml-2 cursor-pointer text-red-500"
+                  onClick={() => removeEmail(idx)}
+                />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-center">
+          <button
+            type="submit"
+            className="px-8 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition"
+          >
+            Submit Job
+          </button>
+        </div>
       </form>
     </div>
-    </div>
-  )
+  );
 }
-
-export default CreateJob
